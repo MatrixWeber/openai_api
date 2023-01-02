@@ -1,7 +1,21 @@
 import argparse
 import openai
+import os
 
-with open('api_keys.txt', 'r') as f:
+# Get the current working directory
+current_dir = os.getcwd()
+
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
+# Construct a file path relative to the script directory
+file_path = os.path.join(script_dir, 'api_keys.txt')
+# Parse the command-line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('prompt', type=str, help='The prompt to generate text for')
+parser.add_argument('--file', type=str, default=file_path, help='The name of the file to read')
+args = parser.parse_args()
+
+with open(args.file, 'r') as f:
     # Read the file line by line
     openai.organization = f.readline().strip()
     openai.api_key = f.readline().strip()
@@ -9,10 +23,6 @@ with open('api_keys.txt', 'r') as f:
 models = openai.Model.list()
 
 # print(models)
-# Parse the command-line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('prompt', type=str, help='The prompt to generate text for')
-args = parser.parse_args()
 
 # Use a model to generate text
 model_engine = "text-davinci-003"
